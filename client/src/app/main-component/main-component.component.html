@@ -1,0 +1,89 @@
+<div class="container" [class.col-md-8]="isLoggedIn()">
+  <form class="form-inline ">
+    <div class=" form-group ">
+      <label for="kategorija" class="col-form-label .padding-md"
+        >Kategorija
+      </label>
+      <select
+        id="kategorija"
+        class="form-control .padding-md"
+        name="kategorija.id"
+        [(ngModel)]="idKategorije"
+      >
+        <option *ngFor="let k of kategorije" [value]="k.id">
+          {{ k.naziv }}</option
+        >
+      </select>
+    </div>
+    <div class=" form-group">
+      <label for="naslov" class="col-form-label">Naslov </label>
+      <input
+        type="text"
+        class="form-control"
+        id="naslov"
+        placeholder=""
+        name="naziv"
+        [(ngModel)]="naziv"
+      />
+    </div>
+    <button class="btn btn-default" (click)="loadFilteredData()">filter</button>
+    <button class="btn btn-default" (click)="resetFilter()">reset</button>
+    <button class="pull-right btn btn-default" (click)="changePage(+1)">
+      >
+    </button>
+    <button class="pull-right btn btn-default" (click)="changePage(-1)">
+      <
+    </button>
+  </form>
+
+  <br />
+
+  <table class="table table-striped">
+    <tr>
+      <th>naslov</th>
+      <th>kategorija</th>
+      <th>opis</th>
+      <th *ngIf="isLoggedIn()">Akcija</th>
+    </tr>
+    <tr *ngFor="let v of vesti">
+      <td class="col-md-2">{{ v.naslov }}</td>
+      <td class="col-md-1">{{ v.kategorija.naziv }}</td>
+      <td class="col-md-9">
+        {{ v.opis }}
+        <button
+          *ngIf="!isLoggedIn()"
+          class="btn btn-primary btn-xs"
+          [routerLink]="['vest/', v.id]"
+        >
+          detalji
+        </button>
+      </td>
+      <td class="col-md-1" *ngIf="isLoggedIn()">
+        <div class="btn-group-vertical">
+          <button class="btn btn-default btn-xs" (click)="edit(v)">izmena</button>
+          <button class="btn btn-danger btn-xs" (click)="delete(v)">brisanje</button>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div *ngIf="isLoggedIn()"class="col-md-4">
+    <form class="form" (ngSubmit)="save()">
+      <div class="form-group">
+        naslov<input name="naslov" class="form-control" [(ngModel)]="vest.naslov">
+      </div>
+        <div class="form-group">
+            <select class="form-control" name="kategorija" [compareWith]="byId" [(ngModel)]="vest.kategorija">
+                <option *ngFor="let kategorija of kategorije" [ngValue]="kategorija">{{kategorija?.naziv}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            opis:<input name="opis" class="form-control" [(ngModel)]="vest.opis">
+        </div>
+        <div class="form-group">
+            sadrzaj:<textarea rows="4"name="sadrzaj" type="text" class="form-control" [(ngModel)]="vest.sadrzaj"></textarea>
+        </div>
+        <input type="submit" value="save" class="btn btn-primary">
+    </form>  
+</div>
